@@ -10,6 +10,17 @@ The base64 fingerprint outputs should be identical.
 pyfindimagedupes needs Python 2.4, 2.5, 2.6 or 2.7 (no Python 3.x) and
 pgmagick installed.
 
+pgmagick can be installed with:
+
+```shell
+sudo apt-get install libgraphicsmagick++1-dev libboost-python-dev
+pip install pgmagick
+```
+
+This may vary based on your distro.
+Some other installation methods can be found [here](https://stackoverflow.com/questions/11140131/pgmagick-install-on-linux).
+
+
 The command-line syntax is compatible with the findimagedupes Perl script's.
 By default, it computes fingerprints in memory for each input file, then
 compares fingerprints and prints file groups.

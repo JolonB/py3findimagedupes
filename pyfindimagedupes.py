@@ -73,17 +73,21 @@ def bitcount_upto8_chr(x):
   return chr((x & 0x0F) + ((x >> 4) & 0x0F))
 
 
-bitcount8 = ''.join(bitcount_upto8_chr(x) for x in xrange(256))
-bitcount_xor8 = tuple(''.join(bitcount_upto8_chr(x ^ y) for x in xrange(256))
-                      for y in xrange(256))
+bitcount8 = ''.join(bitcount_upto8_chr(x) for x in range(256))
+bitcount_xor8 = tuple(''.join(bitcount_upto8_chr(x ^ y) for x in range(256))
+                      for y in range(256))
 assert ord(bitcount_xor8[123][55]) == 3
 
 
 def strxor_bitcount(a, b):
   if len(a) != len(b):
     raise ValueError
-  return sum(ord(bitcount_xor8[ord(ac)][ord(bc)])
-             for ac, bc in itertools.izip(a, b))
+  if isinstance(a, str):
+    a = a.encode()
+  if isinstance(b, str):
+    b = b.encode()
+  return sum(ord(bitcount_xor8[ac][bc])
+             for ac, bc in zip(a, b))
 
 
 assert strxor_bitcount('abxx', 'caxx') == 3
@@ -94,10 +98,10 @@ def yield_matching_groups(pairs):
     pairs = tuple(pairs)
   if len(pairs) > 1:
     do_ignore = [False] * len(pairs)
-    for i in xrange(len(pairs)):
+    for i in range(len(pairs)):
       if not do_ignore[i]:
         matches = [
-            j for j in xrange(i + 1, len(pairs)) if
+            j for j in range(i + 1, len(pairs)) if
             not do_ignore[j] and
             strxor_bitcount(pairs[i][1], pairs[j][1]) <= diff_bit_threshold]
         if matches:
@@ -124,7 +128,7 @@ def get_doc(doc=None):
 
 def main(argv):
   if len(argv) < 2 or argv[1] == '--help':
-    print get_doc()
+    print(get_doc())
     sys.exit(0)
   try:
     is_n = False
@@ -148,12 +152,12 @@ def main(argv):
         is_n = True
       else:
         raise ValueError('Unknown flag: %s' % arg)
-  except ValueError, e:
-    print >>sys.stderr, 'error: %s\n\n%s\n\nerror: %s' % (e, get_doc(), e)
+  except ValueError as e:
+    print('error: %s\n\n%s\n\nerror: %s' % (e, get_doc(), e), file=sys.stderr)
     sys.exit(1)
 
   # Calling abspath for compatibility with the findimagedupes Perl script.
-  filenames = map(os.path.abspath, argv[i:])
+  filenames = list(map(os.path.abspath, argv[i:]))
   # TODO(pts): Catch and handle RuntimeError on fingerprint_image.
   if is_vfp or not is_n:
     pairs = []
@@ -165,7 +169,7 @@ def main(argv):
       if not is_n:
         pairs.append((filename, fp))
     for matching_filenames in yield_matching_groups(pairs):
-      print ' '.join(matching_filenames)
+      print(' '.join(matching_filenames))
 
 
 if __name__ == '__main__':
