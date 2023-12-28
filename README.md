@@ -7,12 +7,11 @@ xor of their fingerprints). pyfindimagedups is a compatible (and a bit slow)
 reference reimplementation of a subset of the findimagedupes Perl script.
 The base64 fingerprint outputs should be identical.
 
-pyfindimagedupes needs Python 2.4, 2.5, 2.6 or 2.7 (no Python 3.x) and
-pgmagick installed.
+pyfindimagedupes needs Python 3.x and pgmagick installed.
 
 pgmagick can be installed with one of the commands listed [here](https://pypi.org/project/pgmagick/).
 
-The Python packages can be installed with:
+The Python packages can then be installed with:
 
 ```shell
 pip install requirements.txt
